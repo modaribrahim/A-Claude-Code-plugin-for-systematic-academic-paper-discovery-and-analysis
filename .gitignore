@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+.ENV
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Claude Code artifacts
+*.session
+*.log
+
+# Search and analysis artifacts
+searching-papers-v2/artifacts/session_*/
+analyzing-papers/artifacts/experiment_*/
+
+# Keep structure files
+!searching-papers-v2/artifacts/.gitkeep
+!analyzing-papers/artifacts/.gitkeep
+
+# Temporary files
+*.tmp
+*.bak
+*.cache
+.DS_Store
+
+# Test files
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Model caches (sentence-transformers)
+models/
+.cache/
