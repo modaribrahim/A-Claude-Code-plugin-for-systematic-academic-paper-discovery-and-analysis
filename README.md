@@ -2,6 +2,7 @@
 
 **A Claude Code plugin for systematic academic paper discovery and analysis**
 
+[![Status: Under Development](https://img.shields.io/badge/Status-Under%20Development-yellow.svg)](https://github.com/modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code Plugin](https://img.shields.io/badge/Claude%20Code-Plugin-purple.svg)](https://docs.claude.com/claude-code)
 [![GitHub issues](https://img.shields.io/github/issues/modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis)](https://github.com/modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis/issues)
@@ -10,20 +11,20 @@
 
 Simply ask Claude to find and analyze academic papers, and Research Companion searches across arXiv, Semantic Scholar, and OpenAlex to discover relevant literature, performs citation network analysis, identifies influential papers, and generates traceable reports—transforming hours of manual research into minutes with full citation tracking and reproducible analysis.
 
-<div align="center">
-
+<p align="center">
   <img src="assets/logo.png" alt="Research Companion Logo" width="200" height="170">
+</p>
 
-  ```
-  ▛▀▖                  ▌   ▞▀▖                ▗
-  ▙▄▘▞▀▖▞▀▘▞▀▖▝▀▖▙▀▖▞▀▖▛▀▖ ▌  ▞▀▖▛▚▀▖▛▀▖▝▀▖▛▀▖▄ ▞▀▖▛▀▖
-  ▌▚ ▛▀ ▝▀▖▛▀ ▞▀▌▌  ▌ ▖▌ ▌ ▌ ▖▌ ▌▌▐ ▌▙▄▘▞▀▌▌ ▌▐ ▌ ▌▌ ▌
-  ▘ ▘▝▀▘▀▀ ▝▀▘▝▀▘▘  ▝▀ ▘ ▘ ▝▀ ▝▀ ▘▝ ▘▌  ▝▀▘▘ ▘▀▘▝▀ ▘ ▘
-  ```
+<pre align="center">
+▛▀▖                  ▌   ▞▀▖                ▗
+▙▄▘▞▀▖▞▀▘▞▀▖▝▀▖▙▀▖▞▀▖▛▀▖ ▌  ▞▀▖▛▚▀▖▛▀▖▝▀▖▛▀▖▄ ▞▀▖▛▀▖
+▌▚ ▛▀ ▝▀▖▛▀ ▞▀▌▌  ▌ ▖▌ ▌ ▌ ▖▌ ▌▌▐ ▌▙▄▘▞▀▌▌ ▌▐ ▌ ▌▌ ▌
+▘ ▘▝▀▘▀▀ ▝▀▘▝▀▘▘  ▝▀ ▘ ▘ ▝▀ ▝▀ ▘▝ ▘▌  ▝▀▘▘ ▘▀▘▝▀ ▘ ▘
+</pre>
 
-  **Search** • **Analyze** • **Cite** — Your Research Companion
-
-</div>
+<p align="center">
+  <b>Search</b> • <b>Analyze</b> • <b>Cite</b> — Your Research Companion
+</p>
 
 ---
 
