@@ -2,11 +2,9 @@
 
 **A Claude Code plugin for systematic academic paper discovery and analysis**
 
-[![Latest Release](https://img.shields.io/github/v/release/modaribrahim/research-companion)](https://github.com/modaribrahim/research-companion/releases)
-[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code Plugin](https://img.shields.io/badge/Claude%20Code-Plugin-purple.svg)](https://docs.claude.com/claude-code)
-[![GitHub issues](https://img.shields.io/github/issues/modaribrahim/research-companion)](https://github.com/modaribrahim/research-companion/issues)
+[![GitHub issues](https://img.shields.io/github/issues/modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis)](https://github.com/modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis/issues)
 
 ---
 
@@ -167,8 +165,8 @@ If you don't have `uv`, install dependencies manually:
 
 ```bash
 # Clone the repository
-git clone https://github.com/modaribrahim/research-companion.git
-cd research-companion
+git clone https://github.com/modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis.git
+cd A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis
 
 # Create virtual environment
 python -m venv .venv
@@ -474,35 +472,6 @@ Get a free key at: https://www.semanticscholar.org/product/api#api-key
 
 ---
 
-## Configuration
-
-### Optional API Keys
-
-For higher rate limits, set environment variables:
-
-```bash
-export SEMANTIC_SCHOLAR_API_KEY="your-key-here"
-```
-
-### Script Options
-
-All scripts support flexible options:
-
-```bash
-# Citation filtering
-python scripts/filter_citations.py --input data.json --top-n 100 --output filtered.json
-
-# Graph algorithms
-python scripts/graph_algorithms.py --input papers.json --algorithm pagerank betweenness --output results.json
-
-# Statistical analysis
-python scripts/statistical_tools.py --input papers.json --analysis distribution frequency --field citations --output stats.json
-```
-
-Use `--help` to see all options.
-
----
-
 ## Directory Structure
 
 ```
@@ -573,7 +542,7 @@ If you use this plugin in your research, please cite:
   title = {Research Companion: A Claude Code Plugin for Academic Paper Discovery and Analysis},
   author = {Modar Ibrahim},
   year = {2025},
-  url = {https://github.com/modaribrahim/research-companion}
+  url = {https://github.com/modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis}
 }
 ```
 
@@ -583,7 +552,7 @@ If you use this plugin in your research, please cite:
 
   **Built with ❤️ for the research community**
 
-  [![GitHub](https://img.shields.io/badge/GitHub-Repository-black.svg)](https://github.com/modaribrahim/research-companion)
+  [![GitHub](https://img.shields.io/badge/GitHub-Repository-black.svg)](https://github.com/modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis)
   [![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
   [![Python](https://img.shields.io/badge/Made%20with-Python-blue.svg)](https://www.python.org/)
 
@@ -591,8 +560,69 @@ If you use this plugin in your research, please cite:
 
 ---
 
+## Configuration
+
+### Hooks for Enhanced Workflow
+
+You can use a **prompt-based hook** on the `Stop` event to intelligently evaluate whether Claude should continue working. This ensures comprehensive paper analysis before stopping.
+
+Add this configuration to your `.claude/settings.local.json`:
+
+```json
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "You are evaluating whether Claude should stop working on a research task.\n\nContext: $ARGUMENTS\n\nAnalyze the conversation and determine if:\n1. All user-requested tasks are complete\n2. Any errors need to be addressed\n3. Follow-up work is needed (e.g., papers need analysis, reports need refinement)\n\nRespond with JSON: {\"ok\": true} to allow stopping, or {\"ok\": false, \"reason\": \"your explanation\"} to continue working.",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**How it works:**
+- When Claude attempts to stop, the hook sends your prompt and context to a fast LLM (Haiku)
+- The LLM responds with structured JSON containing `ok` (true to allow stopping, false to prevent it) and `reason` (explanation when ok is false)
+- If the LLM determines the task isn't complete, it returns `{"ok": false, "reason": "..."}` and Claude will continue working
+- The `$ARGUMENTS` placeholder gets replaced with the hook input JSON automatically
+
+**For skills specifically:** You can also define hooks directly in your skill's frontmatter using the same format. The `Stop` hook in frontmatter is automatically converted to a `SubagentStop` event.
+
+### Optional API Keys
+
+For higher rate limits, set environment variables:
+
+```bash
+export SEMANTIC_SCHOLAR_API_KEY="your-key-here"
+```
+
+### Script Options
+
+All scripts support flexible options:
+
+```bash
+# Citation filtering
+python scripts/filter_citations.py --input data.json --top-n 100 --output filtered.json
+
+# Graph algorithms
+python scripts/graph_algorithms.py --input papers.json --algorithm pagerank betweenness --output results.json
+
+# Statistical analysis
+python scripts/statistical_tools.py --input papers.json --analysis distribution frequency --field citations --output stats.json
+```
+
+Use `--help` to see all options.
+
+---
+
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/modaribrahim/research-companion/issues)
+- **Issues**: [GitHub Issues](https://github.com/modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis/issues)
 - **Documentation**: See `.claude/skills/*/SKILL.md` for detailed workflows
 - **Claude Code Docs**: [https://docs.claude.com/claude-code](https://docs.claude.com/claude-code)
