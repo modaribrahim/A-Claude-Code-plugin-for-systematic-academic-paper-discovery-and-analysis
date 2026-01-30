@@ -65,8 +65,8 @@ Which paper collection would you like to analyze?
 
 ```bash
 # List sessions
-python ./analyzing-papers/scripts/select_input.py \
-  --search-dir ./searching-papers-v2/artifacts \
+python ./skills/analyzing-papers/tools/select_input.py \
+  --search-dir ./skills/searching-ml-papers/artifacts \
   --list
 ```
 
@@ -99,8 +99,8 @@ Select session number: _
 ### Validate Session
 
 ```bash
-python ./analyzing-papers/scripts/select_input.py \
-  --search-dir ./searching-papers-v2/artifacts \
+python ./skills/analyzing-papers/tools/select_input.py \
+  --search-dir ./skills/searching-ml-papers/artifacts \
   --session session_20250128_143026 \
   --output experiment_config.json
 ```
@@ -172,7 +172,7 @@ analyzing-papers/artifacts/
 ### Step 1: Extract Basic Data
 
 ```bash
-python ./analyzing-papers/scripts/extract_data.py \
+python ./skills/analyzing-papers/tools/extract_data.py \
   --input <session_path>/deduplicated.json \
   --output ./analyzing-papers/artifacts/experiment_XXXX/extracted_data.json
 ```
@@ -220,7 +220,7 @@ Read template.md (use "Quick Analysis" template if available, adapt "Full Analys
 ### Step 1: Extract Temporal Data
 
 ```bash
-python ./analyzing-papers/scripts/extract_temporal.py \
+python ./skills/analyzing-papers/tools/extract_temporal.py \
   --input <session_path>/deduplicated.json \
   --output ./analyzing-papers/artifacts/experiment_XXXX/temporal_data.json
 ```
@@ -237,10 +237,10 @@ python ./analyzing-papers/scripts/extract_temporal.py \
 
 ```bash
 # Check --help for options
-python ./analyzing-papers/scripts/graph_algorithms.py --help
+python ./skills/analyzing-papers/tools/graph_algorithms.py --help
 
 # Run PageRank and Betweenness for comprehensive analysis
-python ./analyzing-papers/scripts/graph_algorithms.py \
+python ./skills/analyzing-papers/tools/graph_algorithms.py \
   --input <session_path>/deduplicated.json \
   --algorithm pagerank betweenness community \
   --output ./analyzing-papers/artifacts/experiment_XXXX/network_analysis.json
@@ -265,17 +265,17 @@ python ./analyzing-papers/scripts/graph_algorithms.py \
 
 ```bash
 # Check --help for options
-python ./analyzing-papers/scripts/statistical_tools.py --help
+python ./skills/analyzing-papers/tools/statistical_tools.py --help
 
 # Citation distribution
-python ./analyzing-papers/scripts/statistical_tools.py \
+python ./skills/analyzing-papers/tools/statistical_tools.py \
   --input <session_path>/deduplicated.json \
   --analysis distribution \
   --field citations \
   --output ./analyzing-papers/artifacts/experiment_XXXX/citation_distribution.json
 
 # Venue frequency
-python ./analyzing-papers/scripts/statistical_tools.py \
+python ./skills/analyzing-papers/tools/statistical_tools.py \
   --input <session_path>/deduplicated.json \
   --analysis frequency \
   --field venue \
@@ -283,7 +283,7 @@ python ./analyzing-papers/scripts/statistical_tools.py \
   --output ./analyzing-papers/artifacts/experiment_XXXX/venue_analysis.json
 
 # Correlation (example: citations vs year)
-python ./analyzing-papers/scripts/statistical_tools.py \
+python ./skills/analyzing-papers/tools/statistical_tools.py \
   --input <session_path>/deduplicated.json \
   --analysis correlation \
   --field1 citations \
@@ -424,10 +424,10 @@ cat .claude/skills/analyzing-papers/docs/template.md
 
 **Use `--help`**:
 ```bash
-python ./analyzing-papers/scripts/extract_data.py --help
-python ./analyzing-papers/scripts/extract_temporal.py --help
-python ./analyzing-papers/scripts/graph_algorithms.py --help
-python ./analyzing-papers/scripts/statistical_tools.py --help
+python ./skills/analyzing-papers/tools/extract_data.py --help
+python ./skills/analyzing-papers/tools/extract_temporal.py --help
+python ./skills/analyzing-papers/tools/graph_algorithms.py --help
+python ./skills/analyzing-papers/tools/statistical_tools.py --help
 ```
 
 **Input paths**: Flexible, accept any valid JSON file path

@@ -90,7 +90,7 @@ Options:
 **CRITICAL**: Every search must create a unique session folder.
 
 ```bash
-python ./searching-papers-v2/scripts/create_session.py create \
+python ./skills/searching-ml-papers/tools/create_session.py create \
   --topic "change detection remote sensing" \
   --search-type comprehensive \
   --time-range "last_5_years" \
@@ -101,7 +101,7 @@ python ./searching-papers-v2/scripts/create_session.py create \
   --year-from 2020 \
   --year-to 2025 \
   --sources "arXiv" \
-  --output ./searching-papers-v2/artifacts/session_20250128_143026_change_detection
+  --output ./skills/searching-ml-papers/artifacts/session_20250128_143026_change_detection
 ```
 
 **What this does**:
@@ -117,7 +117,7 @@ session_YYYYMMDD_HHMMSS_topic_keywords
 
 **Use `--help`**:
 ```bash
-python ./searching-papers-v2/scripts/create_session.py create --help
+python ./skills/searching-ml-papers/tools/create_session.py create --help
 ```
 
 ---
@@ -125,7 +125,7 @@ python ./searching-papers-v2/scripts/create_session.py create --help
 ## Stage 3: Execute Multi-Source Search
 
 ```bash
-python ./searching-papers-v2/scripts/multi_search.py \
+python ./skills/searching-ml-papers/tools/multi_search.py \
   --query "change detection remote sensing deep learning" \
   --year-from 2020 \
   --year-to 2025 \
@@ -134,12 +134,12 @@ python ./searching-papers-v2/scripts/multi_search.py \
   --fields-of-study "Computer Science" \
   --venue "arXiv" \
   --max-results 500 \
-  --output ./searching-papers-v2/artifacts/session_XXXX/search_results.json
+  --output ./skills/searching-ml-papers/artifacts/session_XXXX/search_results.json
 ```
 
 **For parameters**, use `--help`:
 ```bash
-python ./searching-papers-v2/scripts/multi_search.py --help
+python ./skills/searching-ml-papers/tools/multi_search.py --help
 ```
 
 **Adjust --max-results based on search type**:
@@ -154,10 +154,10 @@ python ./searching-papers-v2/scripts/multi_search.py --help
 
 ### For Quick Search:
 ```bash
-python ./searching-papers-v2/scripts/filter_citations.py \
-  --input ./searching-papers-v2/artifacts/session_XXXX/search_results.json \
+python ./skills/searching-ml-papers/tools/filter_citations.py \
+  --input ./skills/searching-ml-papers/artifacts/session_XXXX/search_results.json \
   --top-n 20 \
-  --output ./searching-papers-v2/artifacts/session_XXXX/filtered.json
+  --output ./skills/searching-ml-papers/artifacts/session_XXXX/filtered.json
 ```
 
 **Why top-n=20**: Quick search only needs 20 papers max.
@@ -167,7 +167,7 @@ python ./searching-papers-v2/scripts/filter_citations.py \
 # Check how many sources succeeded
 python -c "
 import json
-with open('./searching-papers-v2/artifacts/session_XXXX/search_results.json', 'r') as f:
+with open('./skills/searching-ml-papers/artifacts/session_XXXX/search_results.json', 'r') as f:
     data = json.load(f)
 working_sources = [k for k, v in data.items() if isinstance(v, list) and len(v) > 0]
 print(f'{len(working_sources)} sources: {working_sources}')
@@ -177,10 +177,10 @@ print(f'{len(working_sources)} sources: {working_sources}')
 # If 1 source: --top-n 500
 # If 2 sources: --top-n 250
 # If 3 sources: --top-n 166
-python ./searching-papers-v2/scripts/filter_citations.py \
-  --input ./searching-papers-v2/artifacts/session_XXXX/search_results.json \
+python ./skills/searching-ml-papers/tools/filter_citations.py \
+  --input ./skills/searching-ml-papers/artifacts/session_XXXX/search_results.json \
   --top-n 500 \
-  --output ./searching-papers-v2/artifacts/session_XXXX/filtered.json
+  --output ./skills/searching-ml-papers/artifacts/session_XXXX/filtered.json
 ```
 
 **Result**: Papers ranked by citation count, filtered to appropriate quantity.
@@ -190,10 +190,10 @@ python ./searching-papers-v2/scripts/filter_citations.py \
 ## Stage 5: Deduplicate
 
 ```bash
-python ./searching-papers-v2/scripts/deduplicate_sources.py \
-  --input ./searching-papers-v2/artifacts/session_XXXX/filtered.json \
+python ./skills/searching-ml-papers/tools/deduplicate_sources.py \
+  --input ./skills/searching-ml-papers/artifacts/session_XXXX/filtered.json \
   --aggressive \
-  --output ./searching-papers-v2/artifacts/session_XXXX/deduplicated.json
+  --output ./skills/searching-ml-papers/artifacts/session_XXXX/deduplicated.json
 ```
 
 **Result**: Unique papers (no duplicates across sources).
@@ -206,11 +206,11 @@ python ./searching-papers-v2/scripts/deduplicate_sources.py \
 
 **For Comprehensive Search**:
 ```bash
-python ./searching-papers-v2/scripts/citation_expand.py \
-  --input ./searching-papers-v2/artifacts/session_XXXX/deduplicated.json \
+python ./skills/searching-ml-papers/tools/citation_expand.py \
+  --input ./skills/searching-ml-papers/artifacts/session_XXXX/deduplicated.json \
   --max-total 500 \
   --per-paper-limit 20 \
-  --output ./searching-papers-v2/artifacts/session_XXXX/deduplicated.json
+  --output ./skills/searching-ml-papers/artifacts/session_XXXX/deduplicated.json
 ```
 
 **This finds papers that cite seed papers** (backward citation search).
@@ -220,8 +220,8 @@ python ./searching-papers-v2/scripts/citation_expand.py \
 ## Stage 7: Update Session Metadata
 
 ```bash
-python ./searching-papers-v2/scripts/create_session.py update \
-  --session-dir ./searching-papers-v2/artifacts/session_XXXX \
+python ./skills/searching-ml-papers/tools/create_session.py update \
+  --session-dir ./skills/searching-ml-papers/artifacts/session_XXXX \
   --total-papers 523 \
   --year-from 2020 \
   --year-to 2025 \
@@ -239,9 +239,9 @@ python ./searching-papers-v2/scripts/create_session.py update \
 ## Stage 8: Generate Summary
 
 ```bash
-python ./searching-papers-v2/scripts/summarize_results.py \
-  --input ./searching-papers-v2/artifacts/session_XXXX/deduplicated.json \
-  --output ./searching-papers-v2/artifacts/session_XXXX/summary.json
+python ./skills/searching-ml-papers/tools/summarize_results.py \
+  --input ./skills/searching-ml-papers/artifacts/session_XXXX/deduplicated.json \
+  --output ./skills/searching-ml-papers/artifacts/session_XXXX/summary.json
 ```
 
 **Result**: Statistics, top papers, venues, concepts.
@@ -306,7 +306,7 @@ What would you like to do?
 ✓ Search completed successfully!
 
 Session: session_20250128_143026_change_detection
-Path: ./searching-papers-v2/artifacts/session_20250128_143026_change_detection
+Path: ./skills/searching-ml-papers/artifacts/session_20250128_143026_change_detection
 
 When you're ready to analyze, use:
   "Analyze the papers from session_20250128_143026_change_detection"
@@ -336,10 +336,10 @@ When you're ready to analyze, use:
 # (results in new_results.json)
 
 # Merge with existing session
-python ./searching-papers-v2/scripts/create_session.py extend \
+python ./skills/searching-ml-papers/tools/create_session.py extend \
   --parent-session session_20250128_143026 \
-  --new-papers ./searching-papers-v2/artifacts/new_results.json \
-  --output ./searching-papers-v2/artifacts/session_20250128_150000_extended
+  --new-papers ./skills/searching-ml-papers/artifacts/new_results.json \
+  --output ./skills/searching-ml-papers/artifacts/session_20250128_150000_extended
 ```
 
 **This creates**:

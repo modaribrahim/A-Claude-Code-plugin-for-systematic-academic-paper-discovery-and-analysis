@@ -28,7 +28,8 @@ Simply ask Claude to find and analyze academic papers, and Research Companion se
 
 ---
 
-[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![uv](https://img.shields.io/badge/uv-Package%20Manager-green.svg)](https://docs.astral.sh/uv/)
 [![Claude](https://img.shields.io/badge/Claude-AI-purple.svg)](https://claude.ai/)
 [![Click](https://img.shields.io/badge/Click-CLI-green.svg)](https://click.palletsprojects.com/)
 [![Requests](https://img.shields.io/badge/Requests-HTTP-orange.svg)](https://requests.readthedocs.io/)
@@ -37,7 +38,7 @@ Simply ask Claude to find and analyze academic papers, and Research Companion se
 [![OpenAlex](https://img.shields.io/badge/OpenAlex-API-teal.svg)](https://openalex.org/)
 
 **Built With**:
-• Python 3.10+ • Claude Code • Click • Requests • arXiv API • Semantic Scholar API • OpenAlex API
+• Python 3.9+ • uv • Claude Code • Click • Requests • arXiv API • Semantic Scholar API • OpenAlex API
 
 ---
 
@@ -47,10 +48,10 @@ Start a new Claude Code session in your terminal and run:
 
 ```bash
 % claude
-> /plugin marketplace add modaribrahim/research-companion
-  ⎿  Successfully added marketplace: research-companion-marketplace
+> /plugin marketplace add modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis
+  ⎿  Successfully added marketplace: research-companion
 
-> /plugin install research-companion@research-companion-marketplace
+> /plugin install research-companion@research-companion
   ⎿  ✓ Installed research-companion. Restart Claude Code to load new plugins.
 ```
 
@@ -143,7 +144,14 @@ graph TB
 ### Prerequisites
 
 - [Claude Code](https://docs.claude.com/claude-code) installed
-- [uv](https://docs.astral.sh/uv/) (optional, for faster dependency installation)
+- [Python 3.9+](https://www.python.org/downloads/)
+- [uv](https://docs.astral.sh/uv/) (required for dependency management)
+
+**Install uv** (if not already installed):
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+# or: pip install uv
+```
 
 ### Install Plugin
 
@@ -151,30 +159,33 @@ Add this plugin to Claude Code:
 
 ```bash
 % claude
-> /plugin marketplace add modaribrahim/research-companion
-  ⎿  Successfully added marketplace: research-companion-marketplace
+> /plugin marketplace add modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis
+  ⎿  Successfully added marketplace: research-companion
 
-> /plugin install research-companion@research-companion-marketplace
+> /plugin install research-companion@research-companion
   ⎿  ✓ Installed research-companion. Restart Claude Code to load new plugins.
 ```
 
-The plugin installs Python dependencies automatically if `uv` is available. If not, see [Manual Installation](#manual-installation) below.
+The plugin will automatically:
+1. Install all Python dependencies using `uv sync`
+2. Create a virtual environment in `.venv/`
+3. Verify the installation
 
-### Manual Installation
+**Note**: The first installation may take a few minutes as `uv` downloads and installs dependencies (including sentence-transformers).
 
-If you don't have `uv`, install dependencies manually:
+### Manual Installation (Optional)
+
+If you need to manually reinstall dependencies:
 
 ```bash
-# Clone the repository
-git clone https://github.com/modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis.git
-cd A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis
+# Navigate to plugin directory
+cd research-companion
 
-# Create virtual environment
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+# Run setup script
+bash scripts/setup.sh
 
-# Install dependencies
-pip install -r requirements.txt
+# Or use uv directly
+uv sync
 ```
 
 ### Verify Installation
@@ -215,7 +226,7 @@ Then it will:
 5. Present results with statistics
 6. Ask: Accept, Refine, Extend, or View Details
 
-**Session folders** are created in `searching-papers-v2/artifacts/session_YYYYMMDD_HHMMSS_topic/`
+**Session folders** are created in `skills/searching-ml-papers/tools/artifacts/session_YYYYMMDD_HHMMSS_topic/`
 
 ### Stage 2: Analyze Papers
 
@@ -235,7 +246,7 @@ Claude will:
    - **Comprehensive (500+)**: Graph algorithms + statistics + LLM strategic reading
 4. Generate traceable report
 
-**Experiment folders** are created in `analyzing-papers/artifacts/experiment_YYYYMMDD_HHMMSS_topic/`
+**Experiment folders** are created in `skills/analyzing-papers/tools/artifacts/experiment_YYYYMMDD_HHMMSS_topic/`
 
 ### Example Workflow
 
@@ -244,14 +255,14 @@ Claude will:
 User: "Do a comprehensive search on change detection"
 
 # 2. Claude asks questions, searches, creates session
-Session: searching-papers-v2/artifacts/session_20250128_143026_change_detection/
+Session: skills/searching-ml-papers/tools/artifacts/session_20250128_143026_change_detection/
 Papers: 523 papers (2020-2025)
 
 # 3. User asks to analyze
 User: "Analyze that session"
 
 # 4. Claude analyzes and creates experiment
-Experiment: analyzing-papers/artifacts/experiment_20250128_150000_change_detection/
+Experiment: skills/analyzing-papers/tools/artifacts/experiment_20250128_150000_change_detection/
 Report: analysis.md with full traceability
 ```
 
@@ -262,7 +273,7 @@ Report: analysis.md with full traceability
 - `deduplicated.json` - Final paper collection
 - `summary.json` - Statistics and top papers
 
-**Analysis Reports** are created as Markdown files in `analyzing-papers/artifacts/experiment_*/analysis.md` with:
+**Analysis Reports** are created as Markdown files in `skills/analyzing-papers/tools/artifacts/experiment_*/analysis.md` with:
 - Executive summary with citations
 - Research landscape (methods, datasets)
 - Citation network insights (influential papers via PageRank)
@@ -304,7 +315,7 @@ Each source provides different coverage and citation data, ensuring comprehensiv
 Every search creates a unique session folder:
 
 ```
-searching-papers-v2/artifacts/session_20250128_143026_change_detection/
+skills/searching-ml-papers/tools/artifacts/session_20250128_143026_change_detection/
 ├── metadata.json          # User preferences + search parameters
 ├── search_results.json    # Raw results from sources
 ├── filtered.json          # After citation filtering
@@ -385,8 +396,8 @@ Claude will:
 ### List All Sessions
 
 ```bash
-python searching-papers-v2/scripts/create_session.py list \
-  --artifacts-dir searching-papers-v2/artifacts
+python skills/searching-ml-papers/tools/scripts/create_session.py list \
+  --artifacts-dir skills/searching-ml-papers/tools/artifacts
 ```
 
 Shows all sessions with:
@@ -401,9 +412,9 @@ Shows all sessions with:
 All scripts support `--help`:
 
 ```bash
-python searching-papers-v2/scripts/multi_search.py --help
-python analyzing-papers/scripts/graph_algorithms.py --help
-python analyzing-papers/scripts/statistical_tools.py --help
+python skills/searching-ml-papers/tools/scripts/multi_search.py --help
+python skills/analyzing-papers/tools/scripts/graph_algorithms.py --help
+python skills/analyzing-papers/tools/scripts/statistical_tools.py --help
 ```
 
 ---
@@ -428,13 +439,17 @@ python analyzing-papers/scripts/statistical_tools.py --help
 
 ## Dependencies
 
-### Core Dependencies
+This plugin uses modern Python packaging with **uv** for fast, reliable dependency management.
+
+### Core Dependencies (auto-installed via `pyproject.toml`)
 
 - `requests>=2.32.0` - HTTP client for API calls
 - `click>=8.0.0` - CLI framework for scripts
 - `arxiv>=2.4.0` - arXiv API client
-- `sentence-transformers>=2.2.0` - Embeddings (optional)
+- `sentence-transformers>=2.2.0` - Embeddings for semantic search
 - `numpy>=1.24.0` - Numerical operations
+
+Each skill has its own dependencies managed via `pyproject.toml` and locked with `uv.lock` for reproducibility.
 
 ### API Keys (Optional)
 
@@ -453,7 +468,7 @@ Get a free key at: https://www.semanticscholar.org/product/api#api-key
 
 ### "No sessions found"
 - Ensure search completed successfully
-- Check `searching-papers-v2/artifacts/` directory
+- Check `skills/searching-ml-papers/tools/artifacts/` directory
 - Verify `sessions_index.json` exists
 
 ### "Session validation failed"
@@ -462,9 +477,9 @@ Get a free key at: https://www.semanticscholar.org/product/api#api-key
 - Ensure JSON format is valid
 
 ### "Import errors"
-- Ensure virtual environment is activated
-- Reinstall dependencies: `pip install -r requirements.txt`
-- Check Python version (3.10+ required)
+- Ensure uv is installed: `uv --version`
+- Reinstall dependencies: `uv sync` or `bash scripts/setup.sh`
+- Check Python version (3.9+ required)
 
 ### API rate limits
 - Use optional API keys for higher limits
@@ -477,14 +492,14 @@ Get a free key at: https://www.semanticscholar.org/product/api#api-key
 
 ```
 research-companion/
-├── .claude/skills/              # Claude Code skills
+├── skills/                      # Claude Code skills
 │   ├── searching-ml-papers/
 │   │   └── SKILL.md            # Search workflow
-│   └── analyzing-papers/
+│   └── skills/analyzing-papers/tools/
 │       ├── SKILL.md            # Analysis workflow
 │       └── docs/
 │           └── template.md      # Report templates
-├── searching-papers-v2/        # Search system
+├── skills/searching-ml-papers/tools/        # Search system
 │   ├── scripts/                # Search scripts (6)
 │   │   ├── multi_search.py
 │   │   ├── filter_citations.py
@@ -495,7 +510,7 @@ research-companion/
 │   ├── artifacts/              # Search sessions
 │   │   └── session_*/
 │   └── clients                # API clients
-├── analyzing-papers/           # Analysis system
+├── skills/analyzing-papers/tools/           # Analysis system
 │   ├── scripts/                # Analysis scripts (6)
 │   │   ├── extract_data.py
 │   │   ├── extract_temporal.py
@@ -507,10 +522,17 @@ research-companion/
 │       └── experiment_*/
 ├── assets/
 │   └── logo.png
+├── hooks/                       # Plugin hooks
+│   └── hooks.json              # Ready & Stop hooks
+├── scripts/                     # Setup scripts
+│   └── setup.sh                # Automated setup
+├── .claude-plugin/              # Plugin manifest
+│   └── plugin.json
+├── pyproject.toml              # Dependencies (uv)
+├── uv.lock                     # Locked versions
 ├── CHANGELOG.md
 ├── LICENSE
-├── README.md
-└── requirements.txt
+└── README.md
 ```
 
 ---
@@ -562,38 +584,6 @@ If you use this plugin in your research, please cite:
 ---
 
 ## Configuration
-
-### Hooks for Enhanced Workflow
-
-You can use a **prompt-based hook** on the `Stop` event to intelligently evaluate whether Claude should continue working. This ensures comprehensive paper analysis before stopping.
-
-Add this configuration to your `.claude/settings.local.json`:
-
-```json
-{
-  "hooks": {
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "prompt",
-            "prompt": "You are evaluating whether Claude should stop working on a research task.\n\nContext: $ARGUMENTS\n\nAnalyze the conversation and determine if:\n1. All user-requested tasks are complete\n2. Any errors need to be addressed\n3. Follow-up work is needed (e.g., papers need analysis, reports need refinement)\n\nRespond with JSON: {\"ok\": true} to allow stopping, or {\"ok\": false, \"reason\": \"your explanation\"} to continue working.",
-            "timeout": 30
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-**How it works:**
-- When Claude attempts to stop, the hook sends your prompt and context to a fast LLM (Haiku)
-- The LLM responds with structured JSON containing `ok` (true to allow stopping, false to prevent it) and `reason` (explanation when ok is false)
-- If the LLM determines the task isn't complete, it returns `{"ok": false, "reason": "..."}` and Claude will continue working
-- The `$ARGUMENTS` placeholder gets replaced with the hook input JSON automatically
-
-**For skills specifically:** You can also define hooks directly in your skill's frontmatter using the same format. The `Stop` hook in frontmatter is automatically converted to a `SubagentStop` event.
 
 ### Optional API Keys
 

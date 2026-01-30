@@ -1,62 +1,68 @@
+# Setup marker file
+.setup_complete
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
 # Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# Virtual environments
 venv/
-.venv/
 env/
 ENV/
-.ENV
+*.egg-info/
+dist/
+build/
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
+# Per-skill virtual environments
+skills/*/.venv/
+skills/*/tools/.venv/
+skills/*/tools/.uv/
+skills/*/tools/uv.lock
 
-# Claude Code artifacts
-*.session
+# uv (root level, if we add it later)
+.uv/
+
+# Node.js (if we add it later)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Logs
+logs/
 *.log
 
-# Search and analysis artifacts
-searching-papers-v2/artifacts/session_*/
-analyzing-papers/artifacts/experiment_*/
+# Environment variables
+.env
+.env.local
 
-# Keep structure files
-!searching-papers-v2/artifacts/.gitkeep
-!analyzing-papers/artifacts/.gitkeep
+# Claude Code specific
+.claude/
+.beads/
+.logs/
 
-# Temporary files
-*.tmp
-*.bak
-*.cache
-.DS_Store
+# Artifacts and session data
+skills/searching-ml-papers/tools/artifacts/sessions/
+skills/analyzing-papers/tools/artifacts/
 
-# Test files
-.pytest_cache/
-.coverage
-htmlcov/
+# OS
+Thumbs.db
 
-# Model caches (sentence-transformers)
-models/
-.cache/

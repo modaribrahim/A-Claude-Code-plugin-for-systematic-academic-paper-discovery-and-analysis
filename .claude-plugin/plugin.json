@@ -1,0 +1,28 @@
+{
+  "name": "research-companion",
+  "description": "Search, analyze, and cite academic papers with full traceability. Multi-source search across arXiv, Semantic Scholar, and OpenAlex with citation network analysis and statistical tools.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Modar Ibrahim",
+    "email": "ibmd7275@gmail.com"
+  },
+  "homepage": "https://github.com/modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis",
+  "repository": "https://github.com/modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis",
+  "license": "MIT",
+  "keywords": [
+    "research",
+    "papers",
+    "academic",
+    "citation-analysis",
+    "literature-review",
+    "arxiv",
+    "semantic-scholar",
+    "openalex"
+  ],
+  "category": "research",
+  "skills": [
+    "skills/searching-ml-papers",
+    "skills/analyzing-papers"
+  ],
+  "hooks": "./hooks/hooks.json"
+}

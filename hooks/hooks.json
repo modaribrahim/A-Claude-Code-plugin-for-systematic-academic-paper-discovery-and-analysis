@@ -1,0 +1,21 @@
+{
+  "post-install": {
+    "command": "bash",
+    "args": [
+      "-c",
+      "if [ ! -f .setup_complete ]; then cd skills/searching-ml-papers/tools && uv sync && cd ../../../skills/analyzing-papers/tools && uv sync && cd ../../../.. && touch .setup_complete && echo 'Setup completed successfully!'; fi"
+    ],
+    "description": "Installing Python dependencies for Research Companion skills"
+  },
+  "Stop": [
+    {
+      "hooks": [
+        {
+          "type": "prompt",
+          "prompt": "You are evaluating whether Claude should stop working on a research task.\n\nContext: $ARGUMENTS\n\nAnalyze the conversation and determine if:\n1. All user-requested tasks are complete\n2. Any errors need to be addressed\n3. Follow-up work is needed (e.g., papers need analysis, reports need refinement)\n\nRespond with JSON: {\"ok\": true} to allow stopping, or {\"ok\": false, \"reason\": \"your explanation\"} to continue working.",
+          "timeout": 30
+        }
+      ]
+    }
+  ]
+}

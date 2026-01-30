@@ -1,0 +1,13 @@
+[project]
+name = "analyzing-papers-tools"
+version = "1.0.0"
+description = "Citation network analysis and statistical tools for Research Companion"
+requires-python = ">=3.9"
+dependencies = [
+    "requests>=2.32.0",
+    "numpy>=1.24.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis"
+Repository = "https://github.com/modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis"
