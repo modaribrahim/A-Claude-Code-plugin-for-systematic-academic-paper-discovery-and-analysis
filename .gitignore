@@ -34,7 +34,6 @@ build/
 skills/*/.venv/
 skills/*/tools/.venv/
 skills/*/tools/.uv/
-skills/*/tools/uv.lock
 
 # uv (root level, if we add it later)
 .uv/

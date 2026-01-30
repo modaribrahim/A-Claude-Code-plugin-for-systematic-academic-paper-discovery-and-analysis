@@ -11,7 +11,7 @@
   "plugins": [
     {
       "name": "research-companion",
-      "source": ".",
+      "source": "./",
       "description": "Search, analyze, and cite academic papers with full traceability. Multi-source search across arXiv, Semantic Scholar, and OpenAlex with citation network analysis and statistical tools.",
       "version": "1.0.0",
       "author": {

@@ -90,7 +90,7 @@ Options:
 **CRITICAL**: Every search must create a unique session folder.
 
 ```bash
-python ./skills/searching-ml-papers/tools/create_session.py create \
+python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/create_session.py create \
   --topic "change detection remote sensing" \
   --search-type comprehensive \
   --time-range "last_5_years" \
@@ -117,7 +117,7 @@ session_YYYYMMDD_HHMMSS_topic_keywords
 
 **Use `--help`**:
 ```bash
-python ./skills/searching-ml-papers/tools/create_session.py create --help
+python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/create_session.py create --help
 ```
 
 ---
@@ -125,7 +125,7 @@ python ./skills/searching-ml-papers/tools/create_session.py create --help
 ## Stage 3: Execute Multi-Source Search
 
 ```bash
-python ./skills/searching-ml-papers/tools/multi_search.py \
+python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/multi_search.py \
   --query "change detection remote sensing deep learning" \
   --year-from 2020 \
   --year-to 2025 \
@@ -139,7 +139,7 @@ python ./skills/searching-ml-papers/tools/multi_search.py \
 
 **For parameters**, use `--help`:
 ```bash
-python ./skills/searching-ml-papers/tools/multi_search.py --help
+python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/multi_search.py --help
 ```
 
 **Adjust --max-results based on search type**:
@@ -154,7 +154,7 @@ python ./skills/searching-ml-papers/tools/multi_search.py --help
 
 ### For Quick Search:
 ```bash
-python ./skills/searching-ml-papers/tools/filter_citations.py \
+python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/filter_citations.py \
   --input ./skills/searching-ml-papers/artifacts/session_XXXX/search_results.json \
   --top-n 20 \
   --output ./skills/searching-ml-papers/artifacts/session_XXXX/filtered.json
@@ -177,7 +177,7 @@ print(f'{len(working_sources)} sources: {working_sources}')
 # If 1 source: --top-n 500
 # If 2 sources: --top-n 250
 # If 3 sources: --top-n 166
-python ./skills/searching-ml-papers/tools/filter_citations.py \
+python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/filter_citations.py \
   --input ./skills/searching-ml-papers/artifacts/session_XXXX/search_results.json \
   --top-n 500 \
   --output ./skills/searching-ml-papers/artifacts/session_XXXX/filtered.json
@@ -190,7 +190,7 @@ python ./skills/searching-ml-papers/tools/filter_citations.py \
 ## Stage 5: Deduplicate
 
 ```bash
-python ./skills/searching-ml-papers/tools/deduplicate_sources.py \
+python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/deduplicate_sources.py \
   --input ./skills/searching-ml-papers/artifacts/session_XXXX/filtered.json \
   --aggressive \
   --output ./skills/searching-ml-papers/artifacts/session_XXXX/deduplicated.json
@@ -206,7 +206,7 @@ python ./skills/searching-ml-papers/tools/deduplicate_sources.py \
 
 **For Comprehensive Search**:
 ```bash
-python ./skills/searching-ml-papers/tools/citation_expand.py \
+python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/citation_expand.py \
   --input ./skills/searching-ml-papers/artifacts/session_XXXX/deduplicated.json \
   --max-total 500 \
   --per-paper-limit 20 \
@@ -220,7 +220,7 @@ python ./skills/searching-ml-papers/tools/citation_expand.py \
 ## Stage 7: Update Session Metadata
 
 ```bash
-python ./skills/searching-ml-papers/tools/create_session.py update \
+python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/create_session.py update \
   --session-dir ./skills/searching-ml-papers/artifacts/session_XXXX \
   --total-papers 523 \
   --year-from 2020 \
@@ -239,7 +239,7 @@ python ./skills/searching-ml-papers/tools/create_session.py update \
 ## Stage 8: Generate Summary
 
 ```bash
-python ./skills/searching-ml-papers/tools/summarize_results.py \
+python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/summarize_results.py \
   --input ./skills/searching-ml-papers/artifacts/session_XXXX/deduplicated.json \
   --output ./skills/searching-ml-papers/artifacts/session_XXXX/summary.json
 ```
@@ -336,7 +336,7 @@ When you're ready to analyze, use:
 # (results in new_results.json)
 
 # Merge with existing session
-python ./skills/searching-ml-papers/tools/create_session.py extend \
+python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/create_session.py extend \
   --parent-session session_20250128_143026 \
   --new-papers ./skills/searching-ml-papers/artifacts/new_results.json \
   --output ./skills/searching-ml-papers/artifacts/session_20250128_150000_extended

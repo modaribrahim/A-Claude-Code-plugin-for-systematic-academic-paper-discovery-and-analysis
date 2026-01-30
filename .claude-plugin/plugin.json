@@ -19,10 +19,9 @@
     "semantic-scholar",
     "openalex"
   ],
-  "category": "research",
   "skills": [
-    "skills/searching-ml-papers",
-    "skills/analyzing-papers"
+    "./skills/searching-ml-papers",
+    "./skills/analyzing-papers"
   ],
   "hooks": "./hooks/hooks.json"
 }
