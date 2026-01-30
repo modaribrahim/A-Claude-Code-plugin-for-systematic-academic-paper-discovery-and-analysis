@@ -27,7 +27,9 @@ Keep your tone formal and academic, don't use any AI emojis.
 ```
 USER REQUEST → AskUserQuestions → Create Session → Search → Filter → Deduplicate
                                                                      ↓
-                                                        Update Session + Summarize
+                                                        (Comprehensive only: Citation Expansion)
+                                                                     ↓
+                                                        Generate Summary → Update Session
                                                                      ↓
                                     AskUserQuestion (Accept/Refine/Extend/Stop)
                                                                      ↓
@@ -89,26 +91,39 @@ Options:
 
 **CRITICAL**: Every search must create a unique session folder.
 
+**Use the user's answers from Stage 1** to populate the parameters:
+
 ```bash
 python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/scripts/create_session.py create \
-  --topic "change detection remote sensing" \
-  --search-type comprehensive \
-  --time-range "last_5_years" \
-  --min-citations 10 \
-  --venues "arXiv,CVPR,ICCV" \
-  --query "change detection remote sensing deep learning" \
+  --topic "USER_TOPIC" \
+  --search-type USER_SEARCH_TYPE \
+  --time-range "USER_TIME_RANGE" \
+  --min-citations USER_CITATION_MIN \
+  --venues "USER_VENUES" \
+  --query "USER_QUERY" \
   --categories "cs.CV,cs.LG" \
-  --year-from 2020 \
-  --year-to 2025 \
-  --sources "arXiv" \
-  --output "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/session_20250128_143026_change_detection
+  --year-from YEAR_FROM \
+  --year-to YEAR_TO \
+  --sources "USER_SOURCES" \
+  --output "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts
 ```
 
 **What this does**:
-- Creates session directory with timestamp
+- Creates session directory with auto-generated timestamp
 - Saves user preferences in metadata.json
 - Registers session in sessions_index.json
 - Prepares for search results
+
+**IMPORTANT**: After running this command, **capture the session ID** from the output.
+
+**Example output format**:
+```
+✓ Session created successfully!
+Session ID: session_20250130_143026_topic_keywords
+Session directory: /path/to/artifacts/session_20250130_143026_topic_keywords
+```
+
+**Copy the SESSION_ID** (e.g., `session_20250130_143026_topic_keywords`) - you'll need it for all subsequent stages.
 
 **Session naming convention**:
 ```
@@ -124,17 +139,19 @@ python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/scripts/create_se
 
 ## Stage 3: Execute Multi-Source Search
 
+**Replace SESSION_ID with the actual session ID captured from Stage 2**:
+
 ```bash
 python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/scripts/multi_search.py \
-  --query "change detection remote sensing deep learning" \
-  --year-from 2020 \
-  --year-to 2025 \
-  --min-citations 10 \
+  --query "USER_QUERY" \
+  --year-from YEAR_FROM \
+  --year-to YEAR_TO \
+  --min-citations USER_CITATION_MIN \
   --categories cs.CV cs.LG \
   --fields-of-study "Computer Science" \
-  --venue "arXiv" \
-  --max-results 500 \
-  --output "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/session_XXXX/search_results.json
+  --venue "USER_VENUES" \
+  --max-results MAX_RESULTS \
+  --output "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/SESSION_ID/search_results.json
 ```
 
 **For parameters**, use `--help`:
@@ -155,33 +172,26 @@ python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/scripts/multi_sea
 ### For Quick Search:
 ```bash
 python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/scripts/filter_citations.py \
-  --input "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/session_XXXX/search_results.json \
+  --input "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/SESSION_ID/search_results.json \
   --top-n 20 \
-  --output "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/session_XXXX/filtered.json
+  --output "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/SESSION_ID/filtered.json
 ```
 
 **Why top-n=20**: Quick search only needs 20 papers max.
 
 ### For Comprehensive Search:
+**Use --top-n 500** to get comprehensive results:
 ```bash
-# Check how many sources succeeded
-python -c "
-import json
-with open('"${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/session_XXXX/search_results.json', 'r') as f:
-    data = json.load(f)
-working_sources = [k for k, v in data.items() if isinstance(v, list) and len(v) > 0]
-print(f'{len(working_sources)} sources: {working_sources}')
-"
-
-# Adjust --top-n based on working sources
-# If 1 source: --top-n 500
-# If 2 sources: --top-n 250
-# If 3 sources: --top-n 166
 python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/scripts/filter_citations.py \
-  --input "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/session_XXXX/search_results.json \
+  --input "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/SESSION_ID/search_results.json \
   --top-n 500 \
-  --output "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/session_XXXX/filtered.json
+  --output "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/SESSION_ID/filtered.json
 ```
+
+**Note**: The filter_citations script automatically handles:
+- Ranking by citation count across all sources
+- Taking top N papers regardless of which source they came from
+- Ensuring citation-filtered quality
 
 **Result**: Papers ranked by citation count, filtered to appropriate quantity.
 
@@ -191,9 +201,9 @@ python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/scripts/filter_ci
 
 ```bash
 python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/scripts/deduplicate_sources.py \
-  --input "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/session_XXXX/filtered.json \
+  --input "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/SESSION_ID/filtered.json \
   --aggressive \
-  --output "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/session_XXXX/deduplicated.json
+  --output "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/SESSION_ID/deduplicated.json
 ```
 
 **Result**: Unique papers (no duplicates across sources).
@@ -207,44 +217,62 @@ python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/scripts/deduplica
 **For Comprehensive Search**:
 ```bash
 python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/scripts/citation_expand.py \
-  --input "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/session_XXXX/deduplicated.json \
+  --input "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/SESSION_ID/deduplicated.json \
   --max-total 500 \
   --per-paper-limit 20 \
-  --output "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/session_XXXX/deduplicated.json
+  --output "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/SESSION_ID/expanded.json
 ```
 
 **This finds papers that cite seed papers** (backward citation search).
 
+**Note**: This creates a NEW file `expanded.json` to avoid overwriting `deduplicated.json`.
+
 ---
 
-## Stage 7: Update Session Metadata
+## Stage 7: Generate Summary
+
+**For Quick Search** (use deduplicated.json):
+```bash
+python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/scripts/summarize_results.py \
+  --input "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/SESSION_ID/deduplicated.json \
+  --output "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/SESSION_ID/summary.json
+```
+
+**For Comprehensive Search with Citation Expansion** (use expanded.json):
+```bash
+python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/scripts/summarize_results.py \
+  --input "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/SESSION_ID/expanded.json \
+  --output "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/SESSION_ID/summary.json
+```
+
+**Result**: Statistics, top papers, venues, concepts.
+
+**Keep summary.json accessible** - you'll need it for Stage 8.
+
+---
+
+## Stage 8: Update Session Metadata
+
+**Use values from summary.json** (generated in Stage 7) to update session metadata:
 
 ```bash
 python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/scripts/create_session.py update \
-  --session-dir "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/session_XXXX \
-  --total-papers 523 \
-  --year-from 2020 \
-  --year-to 2025 \
-  --top-venues '{"arXiv": 450, "IEEE": 50}' \
-  --citation-stats '{"mean": 25.5, "median": 15, "max": 500}'
+  --session-dir "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/SESSION_ID \
+  --total-papers TOTAL_COUNT \
+  --year-from YEAR_FROM \
+  --year-to YEAR_TO \
+  --top-venues '{"arXiv": COUNT1, "IEEE": COUNT2}' \
+  --citation-stats '{"mean": MEAN, "median": MEDIAN, "max": MAX}'
 ```
+
+**Where to get values**:
+- Read summary.json to get: total_papers, citation_stats, top_venues
+- Use these values in the --total-papers, --top-venues, and --citation-stats flags
 
 **This updates**:
 - Session status: created → completed
 - Results summary in metadata.json
 - Sessions index
-
----
-
-## Stage 8: Generate Summary
-
-```bash
-python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/scripts/summarize_results.py \
-  --input "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/session_XXXX/deduplicated.json \
-  --output "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/session_XXXX/summary.json
-```
-
-**Result**: Statistics, top papers, venues, concepts.
 
 ---
 
@@ -274,14 +302,14 @@ Read summary.json and present:
 Search completed!
 
 Summary:
-- Found 523 papers on "change detection remote sensing"
-- Year range: 2020-2025
-- Top venues: arXiv (450 papers), IEEE (50 papers)
-- Citation stats: mean=25.5, median=15, max=500
+- Found TOTAL_COUNT papers on "USER_TOPIC"
+- Year range: YEAR_FROM - YEAR_TO
+- Top venues: arXiv (COUNT1), OTHER_VENUE (COUNT2)
+- Citation stats: mean=MEAN, median=MEDIAN, max=MAX
 
 Top 10 papers:
-1. [Paper Title] (500 citations, arXiv 2024)
-2. [Paper Title] (300 citations, CVPR 2023)
+1. [Paper Title] (CITATION_COUNT citations, VENUE YEAR)
+2. [Paper Title] (CITATION_COUNT citations, VENUE YEAR)
 ...
 
 What would you like to do?
@@ -305,11 +333,11 @@ What would you like to do?
 ```
 ✓ Search completed successfully!
 
-Session: session_20250128_143026_change_detection
-Path: "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/session_20250128_143026_change_detection
+Session: SESSION_ID
+Path: "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/SESSION_ID
 
 When you're ready to analyze, use:
-  "Analyze the papers from session_20250128_143026_change_detection"
+  "Analyze the papers from SESSION_ID"
 ```
 
 ### Option 2: Refine Search
@@ -330,17 +358,42 @@ When you're ready to analyze, use:
 - Broader time range?
 - Additional venues?
 
-**Then**:
-```bash
-# Execute new search with extended parameters
-# (results in new_results.json)
+**Then run search pipeline with new parameters**:
 
-# Merge with existing session
-python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/scripts/create_session.py extend \
-  --parent-session session_20250128_143026 \
-  --new-papers "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/new_results.json \
-  --output "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/session_20250128_150000_extended
-```
+1. **Create temporary files for new search** (outside SESSION_ID to avoid confusion):
+   ```bash
+   # Run multi_search with new parameters
+   python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/scripts/multi_search.py \
+     --query "NEW_QUERY" \
+     --year-from NEW_YEAR_FROM \
+     --year-to NEW_YEAR_TO \
+     --output "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/temp_search_results.json
+
+   # Run filter_citations
+   python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/scripts/filter_citations.py \
+     --input "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/temp_search_results.json \
+     --top-n 500 \
+     --output "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/temp_filtered.json
+
+   # Run deduplicate_sources
+   python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/scripts/deduplicate_sources.py \
+     --input "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/temp_filtered.json \
+     --aggressive \
+     --output "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/temp_deduplicated.json
+   ```
+
+2. **Now merge with existing session**:
+   ```bash
+   python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/scripts/create_session.py extend \
+     --parent-session SESSION_ID \
+     --new-papers "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/temp_deduplicated.json \
+     --output "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/SESSION_ID_extended
+   ```
+
+3. **Clean up temporary files**:
+   ```bash
+   rm "${CLAUDE_PLUGIN_ROOT}"/skills/searching-ml-papers/tools/artifacts/temp_*.json
+   ```
 
 **This creates**:
 - New session folder with timestamp
@@ -350,7 +403,10 @@ python "${CLAUDE_PLUGIN_ROOT}/skills/searching-ml-papers/tools/scripts/create_se
 **Update parent's child_sessions list**
 
 ### Option 4: View Details
-- Read top 20 papers from deduplicated.json
+- Read top 20 papers from the appropriate file:
+  - **Quick Search**: Read from `deduplicated.json`
+  - **Comprehensive Search with Citation Expansion**: Read from `expanded.json`
+  - **Comprehensive Search without Citation Expansion**: Read from `deduplicated.json`
 - Present with:
   - Title
   - Authors
@@ -454,8 +510,11 @@ Then ask again what to do.
 
 ### Only one source working
 - Normal if APIs fail
-- Adjust --top-n accordingly
-- Citation filtering still ranks by impact
+- Adjust --top-n based on number of working sources:
+  - **1 source**: Use --top-n 500 (get all from that source)
+  - **2 sources**: Use --top-n 250 (split evenly)
+  - **3 sources**: Use --top-n 166 (split evenly)
+- See Stage 4 for citation filtering details
 
 ### Session creation fails
 - Check artifacts directory exists
@@ -474,16 +533,17 @@ Then ask again what to do.
 ## File Structure
 
 ```
-searching-papers-v2/
+skills/searching-ml-papers/tools/
 ├── artifacts/
 │   ├── sessions_index.json                    # Index of all sessions
-│   ├── session_20250128_143026_change_detection/
+│   ├── session_YYYYMMDD_HHMMSS_TOPIC/
 │   │   ├── metadata.json                      # User preferences + stats
 │   │   ├── search_results.json                # Raw from multi_search
 │   │   ├── filtered.json                      # After citation filtering
 │   │   ├── deduplicated.json                  # Final paper collection
+│   │   ├── expanded.json                      # After citation expansion (comprehensive only)
 │   │   └── summary.json                       # Statistics + top papers
-│   └── session_20250128_150000_extended/
+│   └── session_YYYYMMDD_HHMMSS_TOPIC_extended/
 │       ├── metadata.json
 │       └── ...
 └── scripts/
@@ -558,7 +618,7 @@ searching-papers-v2/
 **Before searching**:
 - [ ] Used AskUserQuestion for all 4 questions
 - [ ] Created session with create_session.py
-- [ ] Working in searching-papers-v2 directory
+- [ ] Captured SESSION_ID from output
 - [ ] Session folder created with metadata.json
 
 **During workflow**:
@@ -566,8 +626,8 @@ searching-papers-v2/
 - [ ] Citation filtering complete (appropriate N for search type)
 - [ ] Deduplication complete
 - [ ] Citation expansion (if comprehensive)
-- [ ] Session metadata updated
 - [ ] Summary generated
+- [ ] Session metadata updated (using values from summary.json)
 
 **After presenting**:
 - [ ] Results shown with statistics
