@@ -1,18 +1,19 @@
 # Research Companion for Claude Code
 
-**A Claude Code plugin for systematic academic paper discovery and analysis**
+**Systematic academic paper discovery and analysis with full citation traceability**
 
 [![Status: Under Development](https://img.shields.io/badge/Status-Under%20Development-yellow.svg)](https://github.com/modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code Plugin](https://img.shields.io/badge/Claude%20Code-Plugin-purple.svg)](https://docs.claude.com/claude-code)
-[![GitHub issues](https://img.shields.io/github/issues/modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis)](https://github.com/modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis/issues)
+
+[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![uv](https://img.shields.io/badge/uv-Package%20Manager-green.svg)](https://docs.astral.sh/uv/)
+[![Ruff](https://img.shields.io/badge/Ruff-Enabled-red.svg)](https://docs.astral.sh/ruff/)
 
 ---
 
-Simply ask Claude to find and analyze academic papers, and Research Companion searches across arXiv, Semantic Scholar, and OpenAlex to discover relevant literature, performs citation network analysis, identifies influential papers, and generates traceable reports—transforming hours of manual research into minutes with full citation tracking and reproducible analysis.
-
 <p align="center">
-  <img src="assets/logo.png" alt="Research Companion Logo" width="200" height="170">
+  <img src="assets/logo.png" alt="Research Companion Logo" width="180" height="150">
 </p>
 
 <pre align="center">
@@ -23,28 +24,27 @@ Simply ask Claude to find and analyze academic papers, and Research Companion se
 </pre>
 
 <p align="center">
-  <b>Search</b> • <b>Analyze</b> • <b>Cite</b> — Your Research Companion
+  <b>Search</b> • <b>Analyze</b> • <b>Cite</b>
 </p>
 
 ---
 
-[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![uv](https://img.shields.io/badge/uv-Package%20Manager-green.svg)](https://docs.astral.sh/uv/)
-[![Claude](https://img.shields.io/badge/Claude-AI-purple.svg)](https://claude.ai/)
-[![Click](https://img.shields.io/badge/Click-CLI-green.svg)](https://click.palletsprojects.com/)
-[![Requests](https://img.shields.io/badge/Requests-HTTP-orange.svg)](https://requests.readthedocs.io/)
-[![arXiv](https://img.shields.io/badge/arXiv-API-red.svg)](https://arxiv.org/)
-[![Semantic Scholar](https://img.shields.io/badge/Semantic_Scholar-API-blue.svg)](https://www.semanticscholar.org/)
-[![OpenAlex](https://img.shields.io/badge/OpenAlex-API-teal.svg)](https://openalex.org/)
+## What It Does
 
-**Built With**:
-• Python 3.9+ • uv • Claude Code • Click • Requests • arXiv API • Semantic Scholar API • OpenAlex API
+Search across arXiv, Semantic Scholar, and OpenAlex → Analyze citation networks → Generate traceable reports with **every claim cited**.
+
+**Perfect for**:
+- Literature reviews
+- Survey papers
+- State-of-the-art research
+- Finding influential papers
+- Tracking research trends
 
 ---
 
 ## Quick Start
 
-Start a new Claude Code session in your terminal and run:
+### 1. Install Plugin
 
 ```bash
 % claude
@@ -52,90 +52,103 @@ Start a new Claude Code session in your terminal and run:
   ⎿  Successfully added marketplace: research-companion
 
 > /plugin install research-companion@research-companion
-  ⎿  ✓ Installed research-companion. Restart Claude Code to load new plugins.
+  ⎿  ✓ Installed research-companion. Restart Claude Code.
 ```
 
-Restart Claude Code. Then simply ask:
+### 2. Use It
+
+Simply ask Claude to find papers:
 
 ```
-"Find papers on quantum machine learning"
-"Analyze the papers from that session"
+"Do a comprehensive search on quantum machine learning"
 ```
 
-Claude will automatically search for papers and generate comprehensive analysis reports.
+Claude will ask 4 questions, then search, filter, and present results.
 
-**Key Features:**
-- 📚 **Multi-Source Search** - Search arXiv, Semantic Scholar, and OpenAlex simultaneously
-- 🔍 **Session Management** - Each search creates a unique session—no data loss
-- 📊 **Two Search Modes** - Quick (20 papers) or Comprehensive (500+ papers)
-- 🌐 **Citation Network Analysis** - PageRank, betweenness centrality, community detection
-- 📈 **Statistical Analysis** - Distributions, frequencies, correlations
-- 🎯 **Full Traceability** - Every claim cites specific papers
-- 🔄 **Extensible** - Refine and extend searches without losing previous results
+Then analyze:
+
+```
+"Analyze that session"
+```
+
+You'll get a detailed report with:
+- Executive summary (cited)
+- Influential papers (PageRank)
+- Temporal trends
+- Research gaps
+- Full paper list (Appendix A)
 
 ---
 
-## How It Works
+## Key Features
 
-Research Companion follows a two-stage workflow to discover and analyze academic papers:
+### 🔍 Multi-Source Search
+- **arXiv** - Latest preprints (CS/physics/math)
+- **Semantic Scholar** - Comprehensive metadata, citations
+- **OpenAlex** - Cross-disciplinary coverage
 
-```mermaid
-graph TB
-    Start([User asks Claude to<br/>find papers]) --> Ask[Stage 1: AskUserQuestion<br/>4 questions about search]
-    Ask --> Create[Create Session<br/>Timestamped folder with metadata]
-    Create --> Search[Multi-Source Search<br/>arXiv, Semantic Scholar, OpenAlex]
-    Search --> Filter[Citation Filtering<br/>Rank by impact]
-    Filter --> Dedupe[Deduplication<br/>Remove duplicates across sources]
-    Dedupe --> Expand{Comprehensive<br/>search?}
-    Expand -->|Yes| Citation[Citation Expansion<br/>Find papers citing seed papers]
-    Expand -->|No| Update
-    Citation --> Update[Update Session Metadata<br/>Save statistics]
-    Update --> Ask2[AskUserQuestion<br/>Accept/Refine/Extend]
+### 📊 Two Search Modes
+- **Quick** - 20 papers in 10 seconds
+- **Comprehensive** - 500+ papers with citation expansion
 
-    Ask2 -->|Refine| Search
-    Ask2 -->|Extend| Merge[Merge with existing session<br/>Preserve original]
-    Ask2 -->|Accept| End1([Session complete<br/>Ready for analysis])
+### 🌐 Citation Network Analysis
+- PageRank (influential papers)
+- Betweenness centrality (bridge papers)
+- Community detection (research clusters)
 
-    Merge --> End1
+### 📈 Statistical Analysis
+- Citation distributions
+- Temporal trends (year-by-year)
+- Venue analysis
+- Author productivity
 
-    End1 --> Analyze[Stage 2: User asks to analyze]
-    Analyze --> Select[Select Input<br/>Which session to analyze?]
-    Select --> Validate[Validate Session<br/>Check metadata & papers]
-    Validate --> Check{Search type?}
+### 🎯 Full Traceability
+- Every claim cites specific papers
+- Numbered references
+- Direct links to papers
 
-    Check -->|Quick 20| Quick[Direct LLM Analysis<br/>Read all papers]
-    Check -->|Comprehensive 500+| Full[Hybrid Analysis<br/>Scripts + LLM]
+### 🔄 Session Management
+- Each search = unique folder (no data loss)
+- Refine or extend searches
+- Re-analyze anytime
 
-    Full --> Temporal[Extract Temporal Data<br/>Year-by-year trends]
-    Full --> Graph[Graph Algorithms<br/>PageRank, betweenness]
-    Full --> Stats[Statistical Tools<br/>Distributions, correlations]
-    Full --> Strategic[LLM Strategic Reading<br/>Top papers by PageRank]
+---
 
-    Temporal --> Report[Generate Report<br/>Full traceability]
-    Graph --> Report
-    Stats --> Report
-    Strategic --> Report
-    Quick --> Report
+## Workflow
 
-    Report --> End2([Analysis complete<br/>Markdown report saved])
-
-    style Start fill:#e1f5ff
-    style End1 fill:#e1f5ff
-    style End2 fill:#e1f5ff
-    style Full fill:#fff4e1
-    style Temporal fill:#f0f0f0
-    style Graph fill:#f0f0f0
-    style Stats fill:#f0f0f0
-    style Strategic fill:#f0f0f0
+```
+┌─────────────────┐
+│ Ask for papers  │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────────────────────────────┐
+│ 1. Search (Multi-source)               │
+│    ├→ arXiv + Semantic Scholar + OpenAlex
+│    ├→ Filter by citations               │
+│    ├→ Remove duplicates                │
+│    └→ Expand citations (optional)      │
+└────────┬────────────────────────────────┘
+         │
+         ▼
+┌─────────────────────────────────────────┐
+│ 2. Accept / Refine / Extend            │
+└────────┬────────────────────────────────┘
+         │
+         ▼
+┌─────────────────────────────────────────┐
+│ 3. Analyze                              │
+│    ├→ Citation network (PageRank)      │
+│    ├→ Temporal trends                  │
+│    ├→ Statistical analysis             │
+│    └→ LLM strategic reading             │
+└────────┬────────────────────────────────┘
+         │
+         ▼
+    Traceable Report
 ```
 
-**Key Features:**
-
-- **Session Isolation**: Each search creates a unique folder with timestamp—no data loss
-- **Conditional Analysis**: Different strategies for quick (20 papers) vs comprehensive (500+)
-- **Graceful Degradation**: Continues with available data if sources fail
-- **Strategic Reading**: For comprehensive analysis, LLM reads top influential papers (PageRank) rather than all papers
-- **Full Traceability**: Every claim in reports cites specific papers with numbered references
+**See [docs/architecture.md](docs/architecture.md) for detailed system design.**
 
 ---
 
@@ -144,10 +157,11 @@ graph TB
 ### Prerequisites
 
 - [Claude Code](https://docs.claude.com/claude-code) installed
-- [Python 3.9+](https://www.python.org/downloads/)
-- [uv](https://docs.astral.sh/uv/) (required for dependency management)
+- Python 3.9+
+- [uv](https://docs.astral.sh/uv/) (package manager)
 
-**Install uv** (if not already installed):
+### Install uv
+
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 # or: pip install uv
@@ -155,257 +169,113 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 ### Install Plugin
 
-Add this plugin to Claude Code:
-
 ```bash
-% claude
+claude
 > /plugin marketplace add modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis
-  ⎿  Successfully added marketplace: research-companion
-
 > /plugin install research-companion@research-companion
-  ⎿  ✓ Installed research-companion. Restart Claude Code to load new plugins.
 ```
 
-The plugin will automatically:
-1. Install all Python dependencies using `uv sync`
-2. Create a virtual environment in `.venv/`
-3. Verify the installation
+Dependencies install automatically via `uv sync`.
 
-**Note**: The first installation may take a few minutes as `uv` downloads and installs dependencies (including sentence-transformers).
+### Manual Setup (Optional)
 
-### Manual Installation (Optional)
-
-If you need to manually reinstall dependencies:
+If dependencies don't install automatically:
 
 ```bash
-# Navigate to plugin directory
-cd research-companion
-
-# Run setup script
-bash scripts/setup.sh
-
-# Or use uv directly
-uv sync
+cd skills/searching-ml-papers/tools && uv sync
+cd ../analyzing-papers/tools && uv sync
 ```
-
-### Verify Installation
-
-In any Claude Code session:
-
-```bash
-"What skills are available?"
-```
-
-You should see `searching-ml-papers` and `analyzing-papers` listed.
 
 ---
 
-## Usage
+## Usage Examples
 
-### Stage 1: Search for Papers
+### Example 1: Quick Literature Review
 
-Simply ask Claude to find papers:
-
-```bash
-"Find papers on change detection in remote sensing using deep learning"
-"Do a comprehensive search on quantum machine learning"
-"Quick search for recent papers on large language models"
+```
+"Find papers on transformer architectures in computer vision"
 ```
 
-Claude will ask you 4 questions via AskUserQuestion:
-1. **Search Type**: Quick (20 papers) or Comprehensive (500+)
-2. **Time Range**: Recent, last 5 years, last 10 years, or all time
-3. **Venues**: arXiv only, include conferences, or all sources
-4. **Citation Filter**: All papers, 10+, 50+, or 100+
+→ Claude asks questions
+→ Searches 3 sources
+→ Returns top 20 papers (filtered by citations)
+→ Session saved for analysis
 
-Then it will:
-1. Create a unique session folder with timestamp
-2. Search across arXiv, Semantic Scholar, and OpenAlex
-3. Filter by citations
-4. Remove duplicates
-5. Present results with statistics
-6. Ask: Accept, Refine, Extend, or View Details
+### Example 2: Comprehensive Survey
 
-**Session folders** are created in `skills/searching-ml-papers/tools/artifacts/session_YYYYMMDD_HHMMSS_topic/`
+```
+"Do a comprehensive search on federated learning from 2020-2024"
+```
 
-### Stage 2: Analyze Papers
+→ Searches 500+ papers
+→ Citation expansion (finds papers citing top results)
+→ De-duplicates across sources
+→ Saves to session
 
-After searching, analyze your collection:
-
-```bash
-"Analyze the papers from session_20250128_143026"
+```
 "Analyze that session"
-"Generate a comprehensive analysis"
 ```
 
-Claude will:
-1. Validate the session
-2. Create analysis experiment folder
-3. Run appropriate analysis:
-   - **Quick (20 papers)**: LLM reads all → direct analysis
-   - **Comprehensive (500+)**: Graph algorithms + statistics + LLM strategic reading
-4. Generate traceable report
+→ Citation network analysis
+→ Temporal trends
+→ Statistical distributions
+→ Generates 20-page report
 
-**Experiment folders** are created in `skills/analyzing-papers/tools/artifacts/experiment_YYYYMMDD_HHMMSS_topic/`
+### Example 3: Refine Search
 
-### Example Workflow
-
-```bash
-# 1. User asks Claude to search
-User: "Do a comprehensive search on change detection"
-
-# 2. Claude asks questions, searches, creates session
-Session: skills/searching-ml-papers/tools/artifacts/session_20250128_143026_change_detection/
-Papers: 523 papers (2020-2025)
-
-# 3. User asks to analyze
-User: "Analyze that session"
-
-# 4. Claude analyzes and creates experiment
-Experiment: skills/analyzing-papers/tools/artifacts/experiment_20250128_150000_change_detection/
-Report: analysis.md with full traceability
+```
+"Refine that search to focus on healthcare applications"
 ```
 
-### Generated Output
-
-**Search Sessions** contain:
-- `metadata.json` - Search parameters and results
-- `deduplicated.json` - Final paper collection
-- `summary.json` - Statistics and top papers
-
-**Analysis Reports** are created as Markdown files in `skills/analyzing-papers/tools/artifacts/experiment_*/analysis.md` with:
-- Executive summary with citations
-- Research landscape (methods, datasets)
-- Citation network insights (influential papers via PageRank)
-- Temporal trends (evolution over time)
-- Statistical analysis (distributions, correlations)
-- Research gaps and recommendations
-- Appendix A: All papers (for verification)
+→ Updates session with new query
+→ Merges with existing results
+→ No data loss
 
 ---
 
-## Features
+## Output
 
-### Multi-Source Paper Search
+### Search Sessions
 
-Search across three academic databases simultaneously:
-
-- **[arXiv](https://arxiv.org/)**: Preprints and cutting-edge research
-- **[Semantic Scholar](https://www.semanticscholar.org/)**: AI-powered paper search with citations
-- **[OpenAlex](https://openalex.org/)**: Open database of global research
-
-Each source provides different coverage and citation data, ensuring comprehensive discovery.
-
-### Two Search Modes
-
-**Quick Search** (20 papers max):
-- Best for: Quick overview, specific papers, time-constrained research
-- Takes: 5-10 seconds
-- Citation-filtered by default
-- No citation expansion
-
-**Comprehensive Search** (500+ papers):
-- Best for: Literature reviews, surveys, deep analysis
-- Takes: 30-60 seconds
-- Citation expansion enabled
-- Full metadata tracking
-
-### Session Management
-
-Every search creates a unique session folder:
+Located in: `skills/searching-ml-papers/tools/artifacts/session_*/`
 
 ```
-skills/searching-ml-papers/tools/artifacts/session_20250128_143026_change_detection/
-├── metadata.json          # User preferences + search parameters
-├── search_results.json    # Raw results from sources
-├── filtered.json          # After citation filtering
-├── deduplicated.json      # Final paper collection
-└── summary.json           # Statistics + top papers
+session_20250130_143026_federated_learning/
+├── metadata.json              # Search parameters
+├── search_results.json        # Raw results
+├── deduplicated.json          # Final collection
+└── summary.json               # Top papers, stats
 ```
 
-**Benefits**:
-- No data loss (sessions never overwrite)
-- Full history of all searches
-- Reproducible research
-- Extend/merge capability
+### Analysis Reports
 
-### Citation Network Analysis
+Generated in: `skills/analyzing-papers/tools/artifacts/experiment_*/`
 
-For comprehensive searches, Research Companion runs graph algorithms:
-
-- **PageRank**: Identifies influential papers (citation count + recency + source)
-- **Betweenness Centrality**: Finds bridge papers connecting different areas
-- **Community Detection**: Groups papers by venue, year, or author (generic)
-
-**Note**: Community detection is generic (venue/year/author). For topic-based communities, the LLM analyzes paper content directly.
-
-### Statistical Analysis
-
-Comprehensive analysis includes:
-
-- **Distributions**: Citation distributions with quartiles, outliers, histograms
-- **Frequencies**: Venue analysis, year distribution, author productivity
-- **Correlations**: Relationships between metrics (citations vs year, etc.)
-
-All with flexible field selection via `--field1`, `--field2`, `--field` options.
-
-### Full Traceability
-
-Every claim in analysis reports cites specific papers:
-
-✅ **Good**:
-- "Transformer methods account for 45% of papers (N=75) [1-10]"
-- "State Space Models emerged in 2025 (8 papers) [11-18]"
-
-❌ **Bad**:
-- "Transformer methods are popular"
-- "State Space Models are emerging"
-
-**Reports include**:
-- Numbered citations for every claim
-- Appendix A with all papers
-- Data source references (e.g., [Source: network_analysis.json])
-- Verification possible
+**Report includes**:
+- **Executive Summary** (3-5 key insights with citations)
+- **Research Landscape** (methods, datasets, metrics)
+- **Citation Network Insights** (influential papers, clusters)
+- **Temporal Trends** (evolution over time)
+- **Statistical Analysis** (distributions, correlations)
+- **Research Gaps** (opportunities)
+- **Appendix A** (all papers with details)
 
 ---
 
 ## Advanced Usage
 
-### Extend a Search
+### Optional API Keys
 
-Add more papers to an existing session:
-
+**Semantic Scholar** (higher rate limits):
 ```bash
-"Extend the search with more papers on transformers"
+export SEMANTIC_SCHOLAR_API_KEY="your-key-here"
+# Get free key: https://www.semanticscholar.org/product/api#api-key
 ```
 
-Claude will:
-1. Execute new search with extended parameters
-2. Merge with existing session
-3. Create new session with parent links
-4. Preserve original session
-
-**Parent-child relationships**:
-```json
-{
-  "parent_session": "session_20250128_143026",
-  "child_sessions": ["session_20250128_150000_extended"]
-}
-```
-
-### List All Sessions
-
+**OpenAlex** (polite requests):
 ```bash
-python skills/searching-ml-papers/tools/scripts/create_session.py list \
-  --artifacts-dir skills/searching-ml-papers/tools/artifacts
+export OPENALEX_EMAIL="your-email@example.com"
 ```
-
-Shows all sessions with:
-- Session ID
-- Topic
-- Search type (quick/comprehensive)
-- Paper count
-- Status
 
 ### Direct Script Usage
 
@@ -414,206 +284,89 @@ All scripts support `--help`:
 ```bash
 python skills/searching-ml-papers/tools/scripts/multi_search.py --help
 python skills/analyzing-papers/tools/scripts/graph_algorithms.py --help
-python skills/analyzing-papers/tools/scripts/statistical_tools.py --help
 ```
 
 ---
 
-## Recent Updates
+## Development
 
-### v1.0.0 (2025-01-28)
+### Setup Development Environment
 
-**Initial Release**
-- Session-managed paper search and analysis
-- Multi-source search (arXiv, Semantic Scholar, OpenAlex)
-- Two search modes: Quick (20 papers) and Comprehensive (500+)
-- Citation network analysis (PageRank, betweenness, communities)
-- Statistical tools (distributions, correlations)
-- Full traceability in reports
-- Generic scripts (no hardcoded keywords)
-- Input validation and error handling
-
-[View complete changelog →](./CHANGELOG.md)
-
----
-
-## Dependencies
-
-This plugin uses modern Python packaging with **uv** for fast, reliable dependency management.
-
-### Core Dependencies (auto-installed via `pyproject.toml`)
-
-- `requests>=2.32.0` - HTTP client for API calls
-- `click>=8.0.0` - CLI framework for scripts
-- `arxiv>=2.4.0` - arXiv API client
-- `sentence-transformers>=2.2.0` - Embeddings for semantic search
-- `numpy>=1.24.0` - Numerical operations
-
-Each skill has its own dependencies managed via `pyproject.toml` and locked with `uv.lock` for reproducibility.
-
-### API Keys (Optional)
-
-This plugin uses public APIs that generally don't require keys. However, for higher rate limits:
-
-**Semantic Scholar** (optional):
 ```bash
-export SEMANTIC_SCHOLAR_API_KEY="your-key-here"
+# Clone repository
+git clone https://github.com/modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis.git
+cd A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis
+
+# Install dependencies
+cd skills/searching-ml-papers/tools && uv sync
+cd ../analyzing-papers/tools && uv sync
 ```
 
-Get a free key at: https://www.semanticscholar.org/product/api#api-key
+### Install Pre-commit Hooks (Recommended)
+
+```bash
+pip install pre-commit
+pre-commit install --install-hooks
+```
+
+**Pre-commit hooks include**:
+- Ruff (Python linting/formatting)
+- Markdownlint (doc quality)
+- Gitleaks (secrets detection)
+
+### Run Tests
+
+```bash
+python skills/searching-ml-papers/tools/test_multi_search.py
+python skills/analyzing-papers/tools/test_build_network.py
+```
+
+**See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines.**
+
+---
+
+## Documentation
+
+- **[Architecture](docs/architecture.md)** - System design, data flow, components
+- **[Contributing](CONTRIBUTING.md)** - Development setup, guidelines
+- **[Changelog](CHANGELOG.md)** - Version history
 
 ---
 
 ## Troubleshooting
 
 ### "No sessions found"
-- Ensure search completed successfully
-- Check `skills/searching-ml-papers/tools/artifacts/` directory
-- Verify `sessions_index.json` exists
-
-### "Session validation failed"
-- Verify session folder exists
-- Check `metadata.json` and `deduplicated.json` are present
-- Ensure JSON format is valid
+→ Check `skills/searching-ml-papers/tools/artifacts/` directory
 
 ### "Import errors"
-- Ensure uv is installed: `uv --version`
-- Reinstall dependencies: `uv sync` or `bash scripts/setup.sh`
-- Check Python version (3.9+ required)
+→ Run `uv sync` in skill's `tools/` directory
 
-### API rate limits
-- Use optional API keys for higher limits
-- Reduce `--max-results` parameter
-- Wait between searches
+### "API rate limit"
+→ Use optional API keys (see above)
 
----
-
-## Directory Structure
-
-```
-research-companion/
-├── skills/                      # Claude Code skills
-│   ├── searching-ml-papers/
-│   │   └── SKILL.md            # Search workflow
-│   └── skills/analyzing-papers/tools/
-│       ├── SKILL.md            # Analysis workflow
-│       └── docs/
-│           └── template.md      # Report templates
-├── skills/searching-ml-papers/tools/        # Search system
-│   ├── scripts/                # Search scripts (6)
-│   │   ├── multi_search.py
-│   │   ├── filter_citations.py
-│   │   ├── deduplicate_sources.py
-│   │   ├── citation_expand.py
-│   │   ├── summarize_results.py
-│   │   └── create_session.py
-│   ├── artifacts/              # Search sessions
-│   │   └── session_*/
-│   └── clients                # API clients
-├── skills/analyzing-papers/tools/           # Analysis system
-│   ├── scripts/                # Analysis scripts (6)
-│   │   ├── extract_data.py
-│   │   ├── extract_temporal.py
-│   │   ├── build_network.py
-│   │   ├── graph_algorithms.py
-│   │   ├── statistical_tools.py
-│   │   └── select_input.py
-│   └── artifacts/              # Analysis experiments
-│       └── experiment_*/
-├── assets/
-│   └── logo.png
-├── hooks/                       # Plugin hooks
-│   └── hooks.json              # Ready & Stop hooks
-├── scripts/                     # Setup scripts
-│   └── setup.sh                # Automated setup
-├── .claude-plugin/              # Plugin manifest
-│   └── plugin.json
-├── pyproject.toml              # Dependencies (uv)
-├── uv.lock                     # Locked versions
-├── CHANGELOG.md
-├── LICENSE
-└── README.md
-```
-
----
-
-## Contributing
-
-Contributions are welcome! Areas for improvement:
-
-- Additional data sources (Google Scholar, Crossref, etc.)
-- More graph algorithms (community detection improvements)
-- Visualization tools (citation networks, temporal trends)
-- Export formats (BibTeX, EndNote, CSV)
-- Performance optimizations
-- Better error handling
+### Need more help?
+→ [Open an issue](https://github.com/modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis/issues)
 
 ---
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) file for details
+MIT License - see [LICENSE](LICENSE) file
 
 ---
 
-## Citation
+## Acknowledgments
 
-If you use this plugin in your research, please cite:
+Built with:
+- [Claude Code](https://docs.claude.com/claude-code)
+- [uv](https://docs.astral.sh/uv/) - Fast package manager
+- [Ruff](https://docs.astral.sh/ruff/) - Python linter
 
-```bibtex
-@software{research_companion,
-  title = {Research Companion: A Claude Code Plugin for Academic Paper Discovery and Analysis},
-  author = {Modar Ibrahim},
-  year = {2025},
-  url = {https://github.com/modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis}
-}
-```
-
----
-
-<div align="center">
-
-  **Built with ❤️ for the research community**
-
-  [![GitHub](https://img.shields.io/badge/GitHub-Repository-black.svg)](https://github.com/modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis)
-  [![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-  [![Python](https://img.shields.io/badge/Made%20with-Python-blue.svg)](https://www.python.org/)
-
-</div>
+Data sources:
+- [arXiv](https://arxiv.org/)
+- [Semantic Scholar](https://www.semanticscholar.org/)
+- [OpenAlex](https://openalex.org/)
 
 ---
 
-## Configuration
-
-### Optional API Keys
-
-For higher rate limits, set environment variables:
-
-```bash
-export SEMANTIC_SCHOLAR_API_KEY="your-key-here"
-```
-
-### Script Options
-
-All scripts support flexible options:
-
-```bash
-# Citation filtering
-python scripts/filter_citations.py --input data.json --top-n 100 --output filtered.json
-
-# Graph algorithms
-python scripts/graph_algorithms.py --input papers.json --algorithm pagerank betweenness --output results.json
-
-# Statistical analysis
-python scripts/statistical_tools.py --input papers.json --analysis distribution frequency --field citations --output stats.json
-```
-
-Use `--help` to see all options.
-
----
-
-## Support
-
-- **Issues**: [GitHub Issues](https://github.com/modaribrahim/A-Claude-Code-plugin-for-systematic-academic-paper-discovery-and-analysis/issues)
-- **Documentation**: See `.claude/skills/*/SKILL.md` for detailed workflows
-- **Claude Code Docs**: [https://docs.claude.com/claude-code](https://docs.claude.com/claude-code)
+**Made with ❤️ for researchers**
